@@ -1,0 +1,372 @@
+{% extends "base.html" %}
+
+{% block title %}Estado - GeeBot Control Panel{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2">Estado del Sistema</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <button class="btn btn-outline-primary" onclick="location.reload()">
+            <i class="bi bi-arrow-clockwise"></i> Actualizar
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Estado del Bot -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-robot"></i> Estado del Bot
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center" id="bot-status-content">
+                    {% if status.bot_status == 'online' %}
+                    <div class="status-online">
+                        <i class="bi bi-check-circle-fill fs-1"></i>
+                        <h4 class="mt-2">En Línea</h4>
+                        <p class="text-muted">El bot está funcionando correctamente</p>
+                    </div>
+                    {% elif status.bot_status == 'connecting' %}
+                    <div class="status-unknown">
+                        <i class="bi bi-arrow-repeat fs-1"></i>
+                        <h4 class="mt-2">Conectando</h4>
+                        <p class="text-muted">El bot se está conectando a Discord</p>
+                    </div>
+                    {% else %}
+                    <div class="status-offline">
+                        <i class="bi bi-x-circle-fill fs-1"></i>
+                        <h4 class="mt-2">Desconectado</h4>
+                        <p class="text-muted">El bot no está funcionando</p>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Botón de actualización y diagnóstico -->
+                <div class="mt-3 text-center">
+                    <button class="btn btn-outline-primary btn-sm" onclick="refreshBotStatus()">
+                        <i class="bi bi-arrow-clockwise"></i> Verificar Estado
+                    </button>
+                </div>
+                
+                <!-- Información de diagnóstico -->
+                <div class="mt-3">
+                    <h6>Diagnóstico:</h6>
+                    <ul class="list-unstyled small">
+                        <li><i class="bi bi-info-circle text-info"></i> Token configurado: 
+                            <span class="badge bg-{% if config.DISCORD_TOKEN %}success{% else %}danger{% endif %}">
+                                {% if config.DISCORD_TOKEN %}Sí{% else %}No{% endif %}
+                            </span>
+                        </li>
+                        <li><i class="bi bi-info-circle text-info"></i> Método de verificación: API de Discord</li>
+                        <li><i class="bi bi-info-circle text-info"></i> Última verificación: <span id="last-check">Ahora</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estado de Configuración -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-gear"></i> Estado de Configuración
+                </h5>
+            </div>
+            <div class="card-body text-center">
+                {% if status.config_status == 'configured' %}
+                <div class="status-online">
+                    <i class="bi bi-check-circle-fill fs-1"></i>
+                    <h4 class="mt-2">Configurado</h4>
+                    <p class="text-muted">Todas las configuraciones están completas</p>
+                </div>
+                {% else %}
+                <div class="status-offline">
+                    <i class="bi bi-exclamation-triangle-fill fs-1"></i>
+                    <h4 class="mt-2">Incompleto</h4>
+                    <p class="text-muted">Faltan configuraciones por completar</p>
+                    <a href="/config" class="btn btn-warning btn-sm">
+                        <i class="bi bi-gear"></i> Configurar Ahora
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Estadísticas del Bot -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-bar-chart"></i> Estadísticas del Bot
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-3">
+                        <div class="border rounded p-3">
+                            <h3 class="text-primary">{{ status.bot_stats.guilds }}</h3>
+                            <small class="text-muted">Servidores</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="border rounded p-3">
+                            <h3 class="text-info">{{ status.bot_stats.users }}</h3>
+                            <small class="text-muted">Usuarios</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="border rounded p-3">
+                            <h3 class="text-success">{{ status.bot_stats.latency }}ms</h3>
+                            <small class="text-muted">Latencia</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="border rounded p-3">
+                            <h3 class="text-warning">{{ status.database.verified_users }}</h3>
+                            <small class="text-muted">Verificados</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-md-6 mb-3">
+                        <div class="border rounded p-3">
+                            <h3 class="text-info">{{ status.database.pending_verifications }}</h3>
+                            <small class="text-muted">Pendientes</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="border rounded p-3">
+                            <h3 class="{% if status.bot_status == 'online' %}text-success{% else %}text-danger{% endif %}">
+                                {% if status.bot_status == 'online' %}✓{% else %}✗{% endif %}
+                            </h3>
+                            <small class="text-muted">Estado</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Información del Sistema -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-info-circle"></i> Información del Sistema
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-server text-primary me-2"></i>
+                            <div>
+                                <strong>Panel de Control</strong>
+                                <br>
+                                <small class="text-muted">Activo y funcionando</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-database text-info me-2"></i>
+                            <div>
+                                <strong>Base de Datos</strong>
+                                <br>
+                                <small class="text-muted">SQLite conectada</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-cloud text-success me-2"></i>
+                            <div>
+                                <strong>Servicios Web</strong>
+                                <br>
+                                <small class="text-muted">APIs funcionando</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Acciones de Mantenimiento -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-tools"></i> Acciones de Mantenimiento
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <button class="btn btn-outline-primary w-100" onclick="location.reload()">
+                            <i class="bi bi-arrow-clockwise"></i> Actualizar Estado
+                        </button>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="/config" class="btn btn-outline-warning w-100">
+                            <i class="bi bi-gear"></i> Revisar Configuración
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="/logs" class="btn btn-outline-info w-100">
+                            <i class="bi bi-file-text"></i> Ver Logs
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="/" class="btn btn-outline-secondary w-100">
+                            <i class="bi bi-house"></i> Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Diagnóstico -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-clipboard-check"></i> Diagnóstico Rápido
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h6 class="alert-heading">Verificaciones automáticas:</h6>
+                    <ul class="mb-0">
+                        <li>
+                            <i class="bi bi-{% if status.bot_status == 'online' %}check-circle text-success{% else %}x-circle text-danger{% endif %}"></i>
+                            Conexión del bot a Discord
+                        </li>
+                        <li>
+                            <i class="bi bi-{% if status.config_status == 'configured' %}check-circle text-success{% else %}x-circle text-danger{% endif %}"></i>
+                            Configuración completa
+                        </li>
+                        <li>
+                            <i class="bi bi-check-circle text-success"></i>
+                            Panel de control funcionando
+                        </li>
+                        <li>
+                            <i class="bi bi-check-circle text-success"></i>
+                            Servidor web activo
+                        </li>
+                    </ul>
+                </div>
+                
+                {% if status.bot_status != 'online' or status.config_status != 'configured' %}
+                <div class="alert alert-warning">
+                    <h6 class="alert-heading">Acciones recomendadas:</h6>
+                    <ul class="mb-0">
+                        {% if status.config_status != 'configured' %}
+                        <li>Completar la configuración en la <a href="/config">página de configuración</a></li>
+                        {% endif %}
+                        {% if status.bot_status != 'online' %}
+                        <li>Verificar que el token de Discord sea válido</li>
+                        <li>Revisar los logs para identificar errores</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Función para actualizar el estado del bot
+async function refreshBotStatus() {
+    const button = document.querySelector('button[onclick="refreshBotStatus()"]');
+    const content = document.getElementById('bot-status-content');
+    const lastCheck = document.getElementById('last-check');
+    
+    // Mostrar loading
+    button.innerHTML = '<i class="bi bi-arrow-clockwise spin"></i> Verificando...';
+    button.disabled = true;
+    
+    try {
+        const response = await fetch('/api/bot-status');
+        const data = await response.json();
+        
+        // Actualizar contenido
+        let statusHtml = '';
+        if (data.status === 'online') {
+            statusHtml = `
+                <div class="status-online">
+                    <i class="bi bi-check-circle-fill fs-1"></i>
+                    <h4 class="mt-2">En Línea</h4>
+                    <p class="text-muted">El bot está funcionando correctamente</p>
+                </div>
+            `;
+        } else {
+            statusHtml = `
+                <div class="status-offline">
+                    <i class="bi bi-x-circle-fill fs-1"></i>
+                    <h4 class="mt-2">Desconectado</h4>
+                    <p class="text-muted">El bot no está funcionando</p>
+                </div>
+            `;
+        }
+        
+        content.innerHTML = statusHtml;
+        
+        // Actualizar timestamp
+        const now = new Date();
+        lastCheck.textContent = now.toLocaleTimeString();
+        
+    } catch (error) {
+        console.error('Error al verificar estado:', error);
+        content.innerHTML = `
+            <div class="status-offline">
+                <i class="bi bi-exclamation-triangle-fill fs-1"></i>
+                <h4 class="mt-2">Error</h4>
+                <p class="text-muted">No se pudo verificar el estado</p>
+            </div>
+        `;
+    } finally {
+        // Restaurar botón
+        button.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Verificar Estado';
+        button.disabled = false;
+    }
+}
+
+// Auto-actualizar cada 30 segundos
+setInterval(function() {
+    refreshBotStatus();
+}, 30000);
+
+// Mostrar timestamp de última actualización
+document.addEventListener('DOMContentLoaded', function() {
+    const now = new Date();
+    const timestamp = now.toLocaleString('es-ES');
+    
+    // Agregar timestamp al título
+    const title = document.querySelector('h1.h2');
+    if (title) {
+        const small = document.createElement('small');
+        small.className = 'text-muted ms-2';
+        small.textContent = `(Actualizado: ${timestamp})`;
+        title.appendChild(small);
+    }
+});
+</script>
+{% endblock %}

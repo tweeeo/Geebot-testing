@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Verificación - GeeBot Control Panel{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2">Configuración de Verificación</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="/panel/" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Volver al Dashboard
+        </a>
+    </div>
+</div>
+
+<form method="post" action="/panel/config/verification/update">
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-shield-check"></i> Embed de Verificación</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="VERIFICATION_EMBED_TITLE" class="form-label">{{ mapping['VERIFICATION_EMBED_TITLE'].name }}</label>
+                    <input type="text" class="form-control" id="VERIFICATION_EMBED_TITLE" name="VERIFICATION_EMBED_TITLE" value="{{ config['VERIFICATION_EMBED_TITLE'] }}" placeholder="Verificación con Genius">
+                    <div class="form-text">{{ mapping['VERIFICATION_EMBED_TITLE'].description }}</div>
+                </div>
+                <div class="col-12 mb-3">
+                    <label for="VERIFICATION_EMBED_DESCRIPTION" class="form-label">{{ mapping['VERIFICATION_EMBED_DESCRIPTION'].name }}</label>
+                    <textarea class="form-control" id="VERIFICATION_EMBED_DESCRIPTION" name="VERIFICATION_EMBED_DESCRIPTION" rows="5" placeholder="Conecta tu cuenta de Genius para obtener roles.">{{ config['VERIFICATION_EMBED_DESCRIPTION'] }}</textarea>
+                    <div class="form-text">{{ mapping['VERIFICATION_EMBED_DESCRIPTION'].description }}</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="VERIFICATION_BUTTON_LABEL" class="form-label">{{ mapping['VERIFICATION_BUTTON_LABEL'].name }}</label>
+                    <input type="text" class="form-control" id="VERIFICATION_BUTTON_LABEL" name="VERIFICATION_BUTTON_LABEL" value="{{ config['VERIFICATION_BUTTON_LABEL'] }}" placeholder="Verificar con Genius">
+                    <div class="form-text">{{ mapping['VERIFICATION_BUTTON_LABEL'].description }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body text-center">
+            <button type="submit" class="btn btn-primary btn-lg me-3">
+                <i class="bi bi-check-circle"></i> Guardar Cambios
+            </button>
+            <a href="/panel/" class="btn btn-secondary btn-lg">
+                <i class="bi bi-x-circle"></i> Cancelar
+            </a>
+        </div>
+    </div>
+</form>
+{% endblock %}

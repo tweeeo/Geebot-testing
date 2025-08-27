@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GeeBot Control Panel{% endblock %}</title>
+    
+    <!-- Favicons (default for all pages) -->
+    <link rel="icon" href="{{ url_for('static', path='favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', path='favicon.ico') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            margin: 2px 0;
+        }
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .main-content {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        .status-online { color: #28a745; }
+        .status-offline { color: #dc3545; }
+        .status-unknown { color: #ffc107; }
+        .spin {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <h4 class="text-white">GeeBot</h4>
+                        <small class="text-white-50">Control Panel</small>
+                    </div>
+                    
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.url.path.endswith('/') or request.url.path.endswith('/panel') %}active{% endif %}" href="/panel/">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/config' in request.url.path %}active{% endif %}" href="/panel/config">
+                                <i class="bi bi-gear"></i> Configuración
+                            </a>
+                            <div class="ms-3 mt-1">
+                                <a class="nav-link {% if '/config/commands' in request.url.path %}active{% endif %}" href="/panel/config/commands">
+                                    <i class="bi bi-sliders"></i> Comandos
+                                </a>
+                                <a class="nav-link {% if '/config/messages' in request.url.path %}active{% endif %}" href="/panel/config/messages">
+                                    <i class="bi bi-chat-dots"></i> Mensajes
+                                </a>
+                                <a class="nav-link {% if '/config/verification' in request.url.path %}active{% endif %}" href="/panel/config/verification">
+                                    <i class="bi bi-shield-check"></i> Verificación
+                                </a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/status' in request.url.path %}active{% endif %}" href="/panel/status">
+                                <i class="bi bi-activity"></i> Estado
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/logs' in request.url.path %}active{% endif %}" href="/panel/logs">
+                                <i class="bi bi-file-text"></i> Logs
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <hr class="text-white-50">
+                    <div class="text-center">
+                        <small class="text-white-50">Usuario: {{ username }}</small>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div class="pt-3 pb-2 mb-3">
+                    {% block content %}{% endblock %}
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

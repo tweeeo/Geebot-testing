@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Comandos - GeeBot Control Panel{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2">Configuración de Comandos</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="/panel/" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Volver al Dashboard
+        </a>
+    </div>
+</div>
+
+<form method="post" action="/panel/config/commands/update">
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-sliders"></i> Prefijo</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="CMD_PREFIX" class="form-label">{{ mapping['CMD_PREFIX'].name }}</label>
+                    <input type="text" class="form-control" id="CMD_PREFIX" name="CMD_PREFIX" value="{{ config['CMD_PREFIX'] }}" placeholder="!!">
+                    <div class="form-text">{{ mapping['CMD_PREFIX'].description }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-toggle-on"></i> Comandos</h5>
+        </div>
+        <div class="card-body">
+            <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" id="ENABLE_COMMAND_PING" name="ENABLE_COMMAND_PING" {% if config['ENABLE_COMMAND_PING'] in ['true', true] %}checked{% endif %}>
+                <label class="form-check-label" for="ENABLE_COMMAND_PING">{{ mapping['ENABLE_COMMAND_PING'].name }}</label>
+                <div class="form-text">{{ mapping['ENABLE_COMMAND_PING'].description }}</div>
+            </div>
+            <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" id="ENABLE_COMMAND_TEST_WELCOME" name="ENABLE_COMMAND_TEST_WELCOME" {% if config['ENABLE_COMMAND_TEST_WELCOME'] in ['true', true] %}checked{% endif %}>
+                <label class="form-check-label" for="ENABLE_COMMAND_TEST_WELCOME">{{ mapping['ENABLE_COMMAND_TEST_WELCOME'].name }}</label>
+                <div class="form-text">{{ mapping['ENABLE_COMMAND_TEST_WELCOME'].description }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body text-center">
+            <button type="submit" class="btn btn-primary btn-lg me-3">
+                <i class="bi bi-check-circle"></i> Guardar Cambios
+            </button>
+            <a href="/panel/" class="btn btn-secondary btn-lg">
+                <i class="bi bi-x-circle"></i> Cancelar
+            </a>
+        </div>
+    </div>
+</form>
+{% endblock %}

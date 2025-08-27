@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}Configuración - GeeBot Control Panel{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2">Configuración del Bot</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="/panel/" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Volver al Dashboard
+        </a>
+    </div>
+</div>
+
+{% if errors %}
+<div class="alert alert-danger" role="alert">
+    <h6 class="alert-heading">Errores de validación:</h6>
+    <ul class="mb-0">
+        {% for error in errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<form method="post" action="./config/update">
+    <div class="row">
+        <!-- Configuración básica -->
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-key"></i> Configuración Básica
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for key, info in config_mapping.items() %}
+                        {% if key in ['DISCORD_TOKEN', 'GENIUS_CLIENT_ID', 'GENIUS_CLIENT_SECRET', 'BASE_URL'] %}
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ key }}" class="form-label">
+                                {{ info.name }}
+                                {% if info.required %}
+                                <span class="text-danger">*</span>
+                                {% endif %}
+                            </label>
+                            <input 
+                                type="{{ info.type }}" 
+                                class="form-control" 
+                                id="{{ key }}" 
+                                name="{{ key }}" 
+                                value="{{ config[key] }}"
+                                {% if info.required %}required{% endif %}
+                                placeholder="Ingresa {{ info.name.lower() }}"
+                            >
+                            <div class="form-text">{{ info.description }}</div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuración de canales -->
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-hash"></i> Configuración de Canales
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for key, info in config_mapping.items() %}
+                        {% if key in ['VERIFICATION_CHANNEL_ID', 'VERIFIED_ROLE_ID'] %}
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ key }}" class="form-label">
+                                {{ info.name }}
+                                {% if info.required %}
+                                <span class="text-danger">*</span>
+                                {% endif %}
+                            </label>
+                            <input 
+                                type="{{ info.type }}" 
+                                class="form-control" 
+                                id="{{ key }}" 
+                                name="{{ key }}" 
+                                value="{{ config[key] }}"
+                                {% if info.required %}required{% endif %}
+                                placeholder="ID del {{ info.name.lower() }}"
+                            >
+                            <div class="form-text">{{ info.description }}</div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuración de roles -->
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-people"></i> Configuración de Roles
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for key, info in config_mapping.items() %}
+                        {% if key.startswith('ROLE_') %}
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ key }}" class="form-label">
+                                {{ info.name }}
+                                {% if info.required %}
+                                <span class="text-danger">*</span>
+                                {% endif %}
+                            </label>
+                            <input 
+                                type="{{ info.type }}" 
+                                class="form-control" 
+                                id="{{ key }}" 
+                                name="{{ key }}" 
+                                value="{{ config[key] }}"
+                                {% if info.required %}required{% endif %}
+                                placeholder="ID del {{ info.name.lower() }}"
+                            >
+                            <div class="form-text">{{ info.description }}</div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuración avanzada -->
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-sliders"></i> Configuración Avanzada
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for key, info in config_mapping.items() %}
+                        {% if key in ['KEEP_ALIVE_INTERVAL'] %}
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ key }}" class="form-label">
+                                {{ info.name }}
+                                {% if info.required %}
+                                <span class="text-danger">*</span>
+                                {% endif %}
+                            </label>
+                            <input 
+                                type="{{ info.type }}" 
+                                class="form-control" 
+                                id="{{ key }}" 
+                                name="{{ key }}" 
+                                value="{{ config[key] }}"
+                                {% if info.required %}required{% endif %}
+                                placeholder="300"
+                            >
+                            <div class="form-text">{{ info.description }}</div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuración de comandos -->
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-terminal"></i> Comandos Habilitados
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for key, info in config_mapping.items() %}
+                        {% if info.type == 'checkbox' %}
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                                <input 
+                                    type="checkbox" 
+                                    class="form-check-input" 
+                                    id="{{ key }}" 
+                                    name="{{ key }}" 
+                                    value="true"
+                                    {% if config[key] == 'true' %}checked{% endif %}
+                                >
+                                <label class="form-check-label" for="{{ key }}">
+                                    {{ info.name }}
+                                </label>
+                            </div>
+                            <div class="form-text">{{ info.description }}</div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <button type="submit" class="btn btn-primary btn-lg me-3">
+                        <i class="bi bi-check-circle"></i> Guardar Configuración
+                    </button>
+                    <a href="/" class="btn btn-secondary btn-lg">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="mt-4">
+    <div class="alert alert-info">
+        <h6 class="alert-heading">Información importante:</h6>
+        <ul class="mb-0">
+            <li>Los campos marcados con <span class="text-danger">*</span> son obligatorios</li>
+            <li>Los cambios se aplicarán inmediatamente pero pueden requerir reiniciar el bot</li>
+            <li>Para obtener IDs de Discord, activa el modo desarrollador en Discord</li>
+            <li>Los tokens y secretos se almacenan de forma segura como variables de entorno</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Validación del formulario
+document.querySelector('form').addEventListener('submit', function(e) {
+    const requiredFields = document.querySelectorAll('input[required]');
+    let hasErrors = false;
+    
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            field.classList.add('is-invalid');
+            hasErrors = true;
+        } else {
+            field.classList.remove('is-invalid');
+        }
+    });
+    
+    if (hasErrors) {
+        e.preventDefault();
+        alert('Por favor, completa todos los campos obligatorios.');
+    }
+});
+
+// Validación en tiempo real para campos numéricos
+document.querySelectorAll('input[type="number"]').forEach(input => {
+    input.addEventListener('input', function() {
+        if (this.value && isNaN(this.value)) {
+            this.classList.add('is-invalid');
+        } else {
+            this.classList.remove('is-invalid');
+        }
+    });
+});
+</script>
+{% endblock %}

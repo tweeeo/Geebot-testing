@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Debug - GeeBot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .debug-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        .debug-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #f00622;
+        }
+        
+        .debug-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .debug-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+        
+        .debug-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50 !important;
+        }
+        
+        .config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .config-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 3px solid;
+        }
+        
+        .config-item.success { border-left-color: #27ae60; }
+        .config-item.error { border-left-color: #f00622; }
+        .config-item.info { border-left-color: #f9f05d; }
+        
+        .config-label {
+            font-weight: 500;
+            color: #4a5568;
+        }
+        
+        .config-value {
+            font-weight: 600;
+            color: #2d3748;
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-indicator.online { background: #27ae60; }
+        .status-indicator.offline { background: #f00622; }
+        
+        .json-viewer {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+        
+        .copy-button {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-button:hover {
+            background: #3182ce;
+        }
+        
+        @media (max-width: 768px) {
+            .config-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <header style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #2d3748; margin-bottom: 10px;">🔧 Panel de Debug</h1>
+            <p style="color: #718096;">Información técnica y configuración del sistema</p>
+        </header>
+
+        <!-- Configuración OAuth -->
+        <div class="debug-card">
+            <div class="debug-header">
+                <div class="debug-icon">🔐</div>
+                <div class="debug-title">Configuración OAuth</div>
+            </div>
+            <div class="config-grid">
+                <div class="config-item {{ 'success' if data.config.client_id_configured else 'error' }}">
+                    <span class="config-label">
+                        <span class="status-indicator {{ 'online' if data.config.client_id_configured else 'offline' }}"></span>
+                        Client ID
+                    </span>
+                    <span class="config-value">{{ 'Configurado ✅' if data.config.client_id_configured else 'No configurado ❌' }}</span>
+                </div>
+                <div class="config-item {{ 'success' if data.config.client_secret_configured else 'error' }}">
+                    <span class="config-label">
+                        <span class="status-indicator {{ 'online' if data.config.client_secret_configured else 'offline' }}"></span>
+                        Client Secret
+                    </span>
+                    <span class="config-value">{{ 'Configurado ✅' if data.config.client_secret_configured else 'No configurado ❌' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- URLs y Rutas -->
+        <div class="debug-card">
+            <div class="debug-header">
+                <div class="debug-icon">🌐</div>
+                <div class="debug-title">URLs y Rutas</div>
+            </div>
+            <div class="config-grid">
+                <div class="config-item info" style="grid-column: 1 / -1;">
+                    <span class="config-label">🏠 Base URL</span>
+                    <span class="config-value">{{ data.config.base_url }}</span>
+                </div>
+                <div class="config-item info" style="grid-column: 1 / -1;">
+                    <span class="config-label">↩️ Redirect URI</span>
+                    <span class="config-value">{{ data.config.redirect_uri }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sistema de Archivos -->
+        <div class="debug-card">
+            <div class="debug-header">
+                <div class="debug-icon">📁</div>
+                <div class="debug-title">Sistema de Archivos</div>
+            </div>
+            <div class="config-grid">
+                <div class="config-item {{ 'success' if data.config.templates_exist else 'error' }}">
+                    <span class="config-label">
+                        <span class="status-indicator {{ 'online' if data.config.templates_exist else 'offline' }}"></span>
+                        Templates
+                    </span>
+                    <span class="config-value">{{ 'Disponibles ✅' if data.config.templates_exist else 'No encontrados ❌' }}</span>
+                </div>
+                <div class="config-item {{ 'success' if data.config.static_exist else 'error' }}">
+                    <span class="config-label">
+                        <span class="status-indicator {{ 'online' if data.config.static_exist else 'offline' }}"></span>
+                        Static Files
+                    </span>
+                    <span class="config-value">{{ 'Disponibles ✅' if data.config.static_exist else 'No encontrados ❌' }}</span>
+                </div>
+                <div class="config-item info" style="grid-column: 1 / -1;">
+                    <span class="config-label">📂 Working Directory</span>
+                    <span class="config-value">{{ data.config.working_directory }}</span>
+                </div>
+                <div class="config-item info">
+                    <span class="config-label">📄 Template Folder</span>
+                    <span class="config-value">{{ data.config.template_folder }}</span>
+                </div>
+                <div class="config-item info">
+                    <span class="config-label">🎨 Static Folder</span>
+                    <span class="config-value">{{ data.config.static_folder }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- JSON Raw -->
+        <div class="debug-card">
+            <div class="debug-header">
+                <div class="debug-icon">📋</div>
+                <div class="debug-title">Datos Raw (JSON)</div>
+            </div>
+            <div class="json-viewer" id="jsonData">{{ data | tojson(indent=2) }}</div>
+            <button class="copy-button" onclick="copyToClipboard()">📋 Copiar JSON</button>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard() {
+            const jsonData = document.getElementById('jsonData').textContent;
+            navigator.clipboard.writeText(jsonData).then(() => {
+                const button = document.querySelector('.copy-button');
+                const originalText = button.textContent;
+                button.textContent = '✅ Copiado!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

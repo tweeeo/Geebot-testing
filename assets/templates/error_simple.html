@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❌ Error - Genius en Español Bot</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+    <style>
+        .error-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .error-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .error-title {
+            color: #f00622 !important;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        .error-message {
+            color: #2c3e50 !important;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #f00622, #c20418);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(240, 6, 34, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">❌</div>
+        <h1 class="error-title">Error del Sistema</h1>
+        <p class="error-message">{{ error_message }}</p>
+        <div style="margin: 20px 0;">
+            <a href="/" class="back-button">🏠 Volver al Dashboard</a>
+            <a href="/status" class="back-button">📊 Ver Estado</a>
+        </div>
+    </div>
+</body>
+</html>

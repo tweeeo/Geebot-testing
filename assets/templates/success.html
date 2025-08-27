@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Verificación Exitosa - Genius en Español Bot{% endblock %}
+
+{% block logo %}
+<img src="{{ url_for('static', filename='images/logo.png') }}" alt="Genius en Español Logo" onerror="this.style.display='none'; this.parentNode.classList.add('fallback-logo');">
+<span class="logo-fallback">🎵</span>
+{% endblock %}
+
+{% block content %}
+<div class="success">
+    <span class="success-icon">🎉</span>
+    <h1>¡Verificación Exitosa!</h1>
+    
+    <div class="info-card user-info">
+        <h3>Bienvenido, {{ user.name or user.login }}!</h3>
+        
+        <div class="user-detail">
+            <strong>Usuario de Genius:</strong>
+            <span>{{ user.login }}</span>
+        </div>
+        
+        {% if user.iq %}
+        <div class="user-detail">
+            <strong>IQ en Genius:</strong>
+            <span>{{ user.iq }}</span>
+        </div>
+        {% endif %}
+        
+        <div class="user-detail">
+            <strong>Roles en Genius:</strong>
+            <div class="roles">
+                {% for role in user.roles or [] %}
+                    <span class="role-badge">{{ role }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <p class="message">
+        ✨ Tu cuenta ha sido verificada exitosamente. <br>
+        Tu nickname en Discord será cambiado a: <strong>{{ user.name or user.login }}</strong>
+    </p>
+    
+    <p class="message">
+        Puedes cerrar esta ventana y regresar a Discord para disfrutar de tus nuevos roles.
+    </p>
+    
+    <button class="close-button" onclick="closeWindow()">
+        Cerrar ventana
+    </button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    // Función mejorada para cerrar ventana
+    function closeWindow() {
+        try {
+            // Mostrar mensaje de cierre
+            const button = document.querySelector('.close-button');
+            button.textContent = 'Cerrando...';
+            button.disabled = true;
+            
+            // Intentar cerrar la ventana
+            window.close();
+            
+            // Si no se puede cerrar automáticamente
+            setTimeout(() => {
+                if (!window.closed) {
+                    button.textContent = 'Puedes cerrar esta pestaña';
+                    // Opcional: redirigir a Discord
+                    // window.location.href = 'discord://';
+                }
+            }, 1000);
+            
+        } catch (error) {
+            console.log('No se pudo cerrar automáticamente');
+            document.querySelector('.close-button').textContent = 'Puedes cerrar esta pestaña';
+        }
+    }
+    
+    // Auto-cerrar después de 10 segundos
+    let countdown = 10;
+    const autoCloseTimer = setInterval(() => {
+        countdown--;
+        const button = document.querySelector('.close-button');
+        if (countdown > 0) {
+            button.textContent = `Cerrar ventana (${countdown}s)`;
+        } else {
+            clearInterval(autoCloseTimer);
+            button.textContent = 'Cerrando automáticamente...';
+            closeWindow();
+        }
+    }, 1000);
+    
+    // Añadir confeti al cargar la página
+    function createConfetti() {
+        const colors = ['#ff6b6b', '#feca57', '#48cae4', '#06d6a0', '#f72585'];
+        
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.cssText = `
+                position: fixed;
+                width: 10px;
+                height: 10px;
+                background: ${colors[Math.floor(Math.random() * colors.length)]};
+                top: -10px;
+                left: ${Math.random() * 100}vw;
+                animation: fall ${Math.random() * 3 + 2}s linear forwards;
+                border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+                z-index: 1000;
+            `;
+            
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => confetti.remove(), 5000);
+        }
+    }
+    
+    // CSS para la animación
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Ejecutar confeti
+    createConfetti();
+    setTimeout(createConfetti, 1000);
+</script>
+{% endblock %}

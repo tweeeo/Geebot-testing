@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 Estado del Sistema - Genius en Español Bot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <style>
+        /* Estilos específicos para la página de estado detallado */
+        .status-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .status-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+        
+        .status-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50 !important;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: linear-gradient(45deg, #f00622, #c20418);
+            color: white !important;
+        }
+        
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            font-weight: 500;
+            color: #2c3e50 !important;
+        }
+        
+        .metric-value {
+            font-weight: 600;
+            color: #34495e !important;
+        }
+        
+        .logo-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo-header img {
+            width: 64px;
+            height: 64px;
+            margin-right: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .instance-info {
+            background: linear-gradient(45deg, #f00622, #c20418);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: white !important;
+        }
+        
+        .instance-id {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #f9f05d !important;
+        }
+        
+        .refresh-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, #f00622, #c20418);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(240, 6, 34, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .refresh-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(240, 6, 34, 0.6);
+        }
+        
+        .status-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-header">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Genius en Español Logo">
+                <div>
+                    <h1>📊 Estado del Sistema</h1>
+                    <p class="subtitle">Monitoreo en tiempo real de Genius en Español Bot</p>
+                </div>
+            </div>
+            
+            <div class="instance-info">
+                🤖 <strong>Instancia Activa:</strong> <span class="instance-id">{{ data.instance_id or 'N/A' }}</span>
+            </div>
+        </header>
+
+        <main>
+            <!-- Estado General -->
+            <div class="status-card">
+                <div class="status-header">
+                    <div class="status-icon">✅</div>
+                    <div class="status-title">Estado General</div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <span class="status-badge">{{ data.status.upper() if data.status else 'UNKNOWN' }}</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">⏱️ Uptime:</span>
+                    <span class="metric-value">{{ data.uptime_human or 'N/A' }}</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">🕐 Iniciado:</span>
+                    <span class="metric-value">{{ data.start_time or 'N/A' }}</span>
+                </div>
+            </div>
+
+            <!-- Bot de Discord -->
+            <div class="status-card">
+                <div class="status-header">
+                    <div class="status-icon">🤖</div>
+                    <div class="status-title">Bot de Discord</div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <span class="status-badge">{{ data.bot.status.upper() if data.bot and data.bot.status else 'OFFLINE' }}</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">🏰 Servidores:</span>
+                    <span class="metric-value">{{ data.bot.guilds_count if data.bot and data.bot.guilds_count else '0' }}</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">👥 Usuarios:</span>
+                    <span class="metric-value">{{ data.bot.users_count if data.bot and data.bot.users_count else 'N/A' }}</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">📊 Latencia:</span>
+                    <span class="metric-value">{{ data.bot.latency if data.bot and data.bot.latency else 'N/A' }}</span>
+                </div>
+            </div>
+
+            <!-- Servidor Web -->
+            <div class="status-card">
+                <div class="status-header">
+                    <div class="status-icon">🌐</div>
+                    <div class="status-title">Servidor Web</div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <span class="status-badge">{{ data.server.status.upper() if data.server and data.server.status else 'OFFLINE' }}</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">📡 Requests:</span>
+                    <span class="metric-value">{{ data.server.requests_count if data.server and data.server.requests_count else '0' }}</span>
+                </div>
+                {% if data.server and data.server.memory_usage and data.server.memory_usage.rss_mb %}
+                <div class="metric-row">
+                    <span class="metric-label">💾 RAM:</span>
+                    <span class="metric-value">{{ "%.1f MB"|format(data.server.memory_usage.rss_mb) }}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Base de Datos -->
+            <div class="status-card">
+                <div class="status-header">
+                    <div class="status-icon">🗄️</div>
+                    <div class="status-title">Base de Datos</div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <span class="status-badge">{{ data.database.status.upper() if data.database and data.database.status else 'OFFLINE' }}</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">✅ Verificados:</span>
+                    <span class="metric-value">{{ data.database.verified_users if data.database and data.database.verified_users is not none else '0' }}</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">⏳ Pendientes:</span>
+                    <span class="metric-value">{{ data.database.pending_verifications if data.database and data.database.pending_verifications is not none else '0' }}</span>
+                </div>
+            </div>
+
+            <!-- Servicios -->
+            <div class="status-card">
+                <div class="status-header">
+                    <div class="status-icon">⚙️</div>
+                    <div class="status-title">Servicios</div>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">🎵 Genius API:</span>
+                    <span class="metric-value">{{ data.services.genius_api.upper() if data.services and data.services.genius_api else 'N/A' }}</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">🔐 OAuth:</span>
+                    <span class="metric-value">{{ data.services.oauth_flow.upper() if data.services and data.services.oauth_flow else 'N/A' }}</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">🌐 Discord API:</span>
+                    <span class="metric-value">ONLINE</span>
+                </div>
+            </div>
+
+            <!-- Sistema -->
+            <div class="status-card">
+                <div class="status-header">
+                    <div class="status-icon">📈</div>
+                    <div class="status-title">Sistema</div>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">🚀 Versión:</span>
+                    <span class="metric-value">v2.0.0</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">🐍 Python:</span>
+                    <span class="metric-value">{{ data.python_version or '3.11+' }}</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">🏗️ Plataforma:</span>
+                    <span class="metric-value">Render.com</span>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>📅 Última actualización: {{ data.timestamp.split('T')[0] if data.timestamp else 'N/A' }} {{ data.timestamp.split('T')[1].split('.')[0] if data.timestamp else '' }}</p>
+            <p class="timestamp">🔄 Auto-actualización cada 30 segundos</p>
+        </footer>
+    </div>
+
+    <button class="refresh-button" onclick="location.reload()" title="Actualizar Estado">
+        🔄
+    </button>
+
+    <script>
+        // Auto-refresh cada 30 segundos
+        setTimeout(() => {
+            location.reload();
+        }, 30000);
+        
+        // Mostrar tiempo transcurrido desde la última actualización
+        let lastUpdate = new Date();
+        setInterval(() => {
+            const now = new Date();
+            const seconds = Math.floor((now - lastUpdate) / 1000);
+            document.title = `📊 Estado del Sistema (${seconds}s) - Genius en Español Bot`;
+        }, 1000);
+    </script>
+</body>
+</html>

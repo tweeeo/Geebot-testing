@@ -1,0 +1,35 @@
+# Configuración para desplegar el Panel de Control en Render
+# Este archivo es para referencia - Render usa configuración web
+
+services:
+  - type: web
+    name: geebot-panel
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python run_panel.py
+    envVars:
+      - key: PANEL_HOST
+        value: "0.0.0.0"
+      - key: PANEL_PORT
+        value: "10000"
+      - key: PANEL_USERNAME
+        value: "admin"
+      # PANEL_PASSWORD_HASH debe configurarse manualmente en Render Dashboard
+      # Usar scripts/generate_password_hash.py para generar el hash
+      
+      # Variables del bot (las mismas que usa el bot principal)
+      # Estas deben configurarse en Render Dashboard:
+      # - DISCORD_TOKEN
+      # - GENIUS_CLIENT_ID  
+      # - GENIUS_CLIENT_SECRET
+      # - BASE_URL
+      # - VERIFICATION_CHANNEL_ID
+      # - VERIFIED_ROLE_ID
+      # - ROLE_VERIFIED_ARTIST
+      # - ROLE_STAFF
+      # - ROLE_MODERATOR
+      # - ROLE_EDITOR
+      # - ROLE_TRANSCRIBER
+      # - ROLE_MEDIATOR
+      # - ROLE_CONTRIBUTOR
+      # - KEEP_ALIVE_INTERVAL

@@ -1,0 +1,30 @@
+# ============================================================================
+# GENIUS EN ESPAÑOL BOT - REQUIREMENTS
+# ============================================================================
+
+# Discord Bot Framework
+discord.py>=2.3.0
+
+# Web Server (ASGI)
+quart>=0.20.0
+hypercorn>=0.14.0
+
+# HTTP Client (para keep-alive y API calls)
+aiohttp>=3.8.0
+
+# Database (SQLite asíncrono)
+aiosqlite>=0.19.0
+
+# System Monitoring (opcional - para métricas de memoria)
+psutil>=5.9.0
+
+# Utilities
+python-dotenv>=1.0.0
+
+# Panel de Control
+fastapi>=0.104.0
+uvicorn>=0.24.0
+jinja2>=3.1.0
+python-multipart>=0.0.6
+bcrypt>=4.0.0
+requests>=2.31.0

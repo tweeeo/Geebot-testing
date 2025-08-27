@@ -1,0 +1,11 @@
+{
+    "name": "Genius en Español",
+    "short_name": "GEE",
+    "description": "Verificación de Genius en Español",
+    "icons": [],
+    "theme_color": "#f00622",
+    "background_color": "#f9f05d",
+    "display": "standalone",
+    "start_url": "/",
+    "scope": "/"
+}

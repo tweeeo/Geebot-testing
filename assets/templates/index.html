@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎵 Genius en Español Bot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3.0">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+<body class="main-page">
+    <div class="main-container">
+        <header>
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Genius en Español Logo" onerror="this.style.display='none'; this.parentNode.classList.add('fallback-logo');">
+                <span class="logo-fallback">🎵</span>
+            </div>
+            <h1>🎵 Genius en Español Bot</h1>
+            <p class="subtitle">Bot de verificación para la comunidad de Genius en Español</p>
+        </header>
+
+        <main>
+            <div class="status-card">
+                <h2>📊 Estado del Servidor</h2>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <span class="status-label">🤖 Bot:</span>
+                        <span class="status-value online">{{ bot_status }}</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">🌐 Servidor Web:</span>
+                        <span class="status-value online">Activo</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">⏱️ Uptime:</span>
+                        <span class="status-value">{{ uptime }}</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">📡 Requests:</span>
+                        <span class="status-value">{{ requests_count }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h2>🔗 Verificación OAuth</h2>
+                <p>Este bot permite a los usuarios verificar sus cuentas de Genius.com y obtener roles automáticamente.</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <h3>✅ Verificación Automática</h3>
+                        <p>Conecta tu cuenta de Genius con Discord</p>
+                    </div>
+                    <div class="feature">
+                        <h3>🏷️ Asignación de Roles</h3>
+                        <p>Obtén roles basados en tu estatus en Genius</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoints-card">
+                <h2>📡 Endpoints Disponibles</h2>
+                <div class="endpoints">
+                    <a href="/health" class="endpoint">🏥 /health</a>
+                    <a href="/status" class="endpoint">📊 /status</a>
+                    <a href="/debug" class="endpoint">🔧 /debug</a>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p> Genius en Español</p>
+            <p class="timestamp">Última actualización: {{ timestamp }}</p>
+        </footer>
+    </div>
+</body>
+</html>

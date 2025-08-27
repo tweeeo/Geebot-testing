@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>{% block title %}Genius en Español{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=10.0">
+    
+    <!-- Favicons (default for all pages) -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}?v=2.0">
+    
+    <meta name="description" content="Bot de Genius en Español - Conecta tu cuenta de Discord con Genius">
+    <meta name="theme-color" content="#f00622">
+    <meta name="msapplication-TileColor" content="#f00622">
+    {% block head %}{% endblock %}
+</head>
+<body class="centered">
+    {% block body %}
+    <div class="container">
+        <div class="logo">
+            {% block logo %}
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Genius en Español Logo" onerror="console.log('Logo failed to load'); this.style.display='none'; this.parentNode.classList.add('fallback-logo');">
+            <span class="logo-fallback">G</span>
+            {% endblock %}
+        </div>
+        {% block content %}{% endblock %}
+    </div>
+    {% endblock %}
+
+    {% block scripts %}
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script>
+        // Debug del logo (simplificado)
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoImages = document.querySelectorAll('.logo img');
+            logoImages.forEach(function(img) {
+                img.onerror = function() {
+                    this.style.display = 'none';
+                    this.parentNode.classList.add('fallback-logo');
+                };
+            });
+            
+            // Limpiar errores de extensiones del navegador
+            window.addEventListener('error', function(e) {
+                if (e.message && e.message.includes('Extension context invalidated')) {
+                    e.preventDefault();
+                    return true;
+                }
+            });
+        });
+        
+        // Auto-cerrar después de 30 segundos en páginas de éxito
+        if (document.querySelector('.success')) {
+            setTimeout(() => {
+                const button = document.querySelector('.close-button');
+                if (button) {
+                    button.textContent = 'Cerrando automáticamente...';
+                    button.disabled = true;
+                }
+                setTimeout(closeWindow, 2000);
+            }, 30000);
+        }
+    </script>
+    {% endblock %}
+</body>
+</html>

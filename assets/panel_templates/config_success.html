@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Configuración Actualizada - GeeBot Control Panel{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2">Configuración Actualizada</h1>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-success">
+            <div class="card-header bg-success text-white text-center">
+                <h4 class="mb-0">
+                    <i class="bi bi-check-circle-fill"></i> Configuración Guardada Exitosamente
+                </h4>
+            </div>
+            <div class="card-body">
+                {% if updated_configs %}
+                <h6>Configuraciones actualizadas:</h6>
+                <ul class="list-group list-group-flush mb-3">
+                    {% for config in updated_configs %}
+                    <li class="list-group-item">
+                        <i class="bi bi-check text-success"></i> {{ config }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                
+                <div class="alert alert-info">
+                    <h6 class="alert-heading">Próximos pasos:</h6>
+                    <ul class="mb-0">
+                        <li>Las variables de entorno han sido actualizadas</li>
+                        <li>Es recomendable reiniciar el bot para aplicar todos los cambios</li>
+                        <li>Verifica el estado del bot en la página de estado</li>
+                    </ul>
+                </div>
+                
+                <div class="text-center">
+                    <a href="/panel/" class="btn btn-primary me-2">
+                        <i class="bi bi-house"></i> Ir al Dashboard
+                    </a>
+                    <a href="/panel/config" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-gear"></i> Editar Más Configuraciones
+                    </a>
+                    <a href="/panel/status" class="btn btn-outline-info">
+                        <i class="bi bi-activity"></i> Ver Estado
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="alert alert-warning">
+            <h6 class="alert-heading">Importante:</h6>
+            <p class="mb-0">
+                Si estás usando Render u otro servicio de hosting, es posible que necesites 
+                configurar estas variables directamente en el panel de tu servicio de hosting 
+                para que persistan entre reinicios.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Auto-redirect después de 10 segundos
+setTimeout(function() {
+    if (confirm('¿Quieres ir automáticamente al dashboard?')) {
+        window.location.href = '/';
+    }
+}, 10000);
+</script>
+{% endblock %}

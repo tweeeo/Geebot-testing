@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Mensajes - GeeBot Control Panel{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2">Configuración de Mensajes</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="/panel/" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Volver al Dashboard
+        </a>
+    </div>
+</div>
+
+<form method="post" action="/panel/config/messages/update">
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-emoji-smile"></i> Bienvenida</h5>
+        </div>
+        <div class="card-body">
+            <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" id="WELCOME_REACTION_ENABLED" name="WELCOME_REACTION_ENABLED" {% if config['WELCOME_REACTION_ENABLED'] in ['true', true] %}checked{% endif %}>
+                <label class="form-check-label" for="WELCOME_REACTION_ENABLED">{{ mapping['WELCOME_REACTION_ENABLED'].name }}</label>
+                <div class="form-text">{{ mapping['WELCOME_REACTION_ENABLED'].description }}</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="WELCOME_MESSAGE_TEXT" class="form-label">{{ mapping['WELCOME_MESSAGE_TEXT'].name }}</label>
+                <textarea class="form-control" id="WELCOME_MESSAGE_TEXT" name="WELCOME_MESSAGE_TEXT" rows="4" placeholder="Bienvenido/a {{user}} a {{server}}!">{{ config['WELCOME_MESSAGE_TEXT'] }}</textarea>
+                <div class="form-text">{{ mapping['WELCOME_MESSAGE_TEXT'].description }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body text-center">
+            <button type="submit" class="btn btn-primary btn-lg me-3">
+                <i class="bi bi-check-circle"></i> Guardar Cambios
+            </button>
+            <a href="/panel/" class="btn btn-secondary btn-lg">
+                <i class="bi bi-x-circle"></i> Cancelar
+            </a>
+        </div>
+    </div>
+</form>
+{% endblock %}

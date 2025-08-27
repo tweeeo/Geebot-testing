@@ -1,0 +1,606 @@
+/* Reset y estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    background: linear-gradient(135deg, #f9f05d 0%, #f00622 100%);
+    min-height: 100vh;
+    color: #2c3e50;
+    padding: 20px 0;
+}
+
+/* Para páginas simples (success, error, etc.) mantener centrado */
+body.centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    width: 90%;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    padding: 2rem;
+    text-align: center;
+    animation: slideIn 0.8s ease-out;
+    border: 1px solid rgba(240, 6, 34, 0.2);
+}
+
+/* Para páginas simples, mantener el comportamiento original */
+body.centered .container {
+    margin: 0;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    background: #f9f05d;
+    border: 3px solid #f00622;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: #f00622;
+    font-weight: bold;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.logo-fallback {
+    display: none;
+    font-size: 3.5rem;
+    color: #f00622;
+    font-weight: 900;
+    font-family: 'Inter', sans-serif;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    letter-spacing: -2px;
+}
+
+.logo.fallback-logo .logo-fallback {
+    display: block;
+}
+
+.logo {
+    position: relative;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: #1a1a1a !important;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+.success h1 {
+    color: #27ae60;
+}
+
+.error h1 {
+    color: #e74c3c;
+}
+
+.info-card {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border-left: 4px solid #f00622;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.info-card h3, .info-card h4 {
+    color: #2c3e50 !important;
+    font-weight: 600;
+}
+
+.info-card p {
+    color: #34495e !important;
+    font-weight: 500;
+}
+
+.success .info-card {
+    border-left-color: #27ae60;
+}
+
+.error .info-card {
+    border-left-color: #e74c3c;
+}
+
+.user-info h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.user-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.8rem 0;
+    padding: 0.8rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.user-detail strong {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.user-detail span {
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.roles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.role-badge {
+    background: linear-gradient(45deg, #f00622, #c20418);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 3px 10px rgba(240, 6, 34, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.role-badge:hover {
+    transform: translateY(-2px);
+}
+
+p, .message, span, div {
+    font-size: 1.1rem;
+    color: #2c2c2c !important;
+    margin: 1.5rem 0;
+    line-height: 1.7;
+    font-weight: 500;
+}
+
+.container p, 
+.container span, 
+.container div,
+.container li,
+.container a,
+.info-card p,
+.info-card span,
+.info-card div,
+p[style*="display: flex"],
+p[style*="align-items: center"] {
+    color: #000000 !important;
+    font-weight: 700 !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+}
+
+/* Específico para los pasos de verificación */
+.info-card p {
+    color: #000000 !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+}
+
+/* Forzar el estilo en todos los elementos de texto */
+* {
+    color: inherit;
+}
+
+.container * {
+    color: #000000 !important;
+}
+
+.close-button {
+    background: linear-gradient(45deg, #f00622, #c20418);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    box-shadow: 0 5px 15px rgba(240, 6, 34, 0.3);
+}
+
+.close-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 20px rgba(240, 6, 34, 0.4);
+}
+
+.error-icon, .success-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.success-icon {
+    color: #27ae60;
+}
+
+.error-icon {
+    color: #e74c3c;
+}
+
+/* Estilos responsivos */
+@media (max-width: 600px) {
+    .container {
+        width: 95%;
+        padding: 1.5rem;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    .user-detail {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: left;
+    }
+}
+
+/* Estilos para la página principal */
+.home-container {
+    max-width: 600px;
+    text-align: center;
+}
+
+.home-container .logo {
+    width: 100px !important;
+    height: 100px !important;
+    background: #f9f05d !important;
+    border: 4px solid #f00622 !important;
+    box-shadow: 0 15px 30px rgba(240, 6, 34, 0.4);
+}
+
+.home-container h1 {
+    color: white;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.home-container p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.status-badge {
+    background: rgba(240, 6, 34, 0.9);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    display: inline-block;
+    box-shadow: 0 5px 15px rgba(240, 6, 34, 0.3);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 5px 15px rgba(240, 6, 34, 0.3);
+    }
+    50% {
+        box-shadow: 0 5px 25px rgba(240, 6, 34, 0.5);
+    }
+    100% {
+        box-shadow: 0 5px 15px rgba(240, 6, 34, 0.3);
+    }
+}
+
+/* Estilos específicos para la página principal (index.html) */
+.status-card, .info-card, .endpoints-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 25px;
+    margin: 20px 0;
+    border-left: 5px solid #f00622;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.status-card h2, .info-card h2, .endpoints-card h2 {
+    color: #2c3e50 !important;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f7fafc;
+    border-radius: 8px;
+    border-left: 3px solid #27ae60;
+}
+
+.status-label {
+    font-weight: 500;
+    color: #4a5568;
+}
+
+.status-value {
+    font-weight: 600;
+    color: #2d3748;
+    font-family: 'Courier New', monospace;
+    background: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.status-value.online {
+    color: #27ae60 !important;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.feature {
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.feature h3 {
+    color: #2c3e50 !important;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.feature p {
+    color: #34495e !important;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.endpoints {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.endpoint {
+    background: linear-gradient(45deg, #f00622, #c20418);
+    color: white !important;
+    text-decoration: none;
+    padding: 15px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(240, 6, 34, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+}
+
+.endpoint:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(240, 6, 34, 0.4);
+    color: white !important;
+}
+
+.subtitle {
+    color: #7f8c8d !important;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ecf0f1;
+}
+
+footer p {
+    color: #7f8c8d !important;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+}
+
+.timestamp {
+    font-size: 0.8rem !important;
+    color: #95a5a6 !important;
+}
+
+/* Responsive para la página principal */
+@media (max-width: 768px) {
+    .status-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .features {
+        grid-template-columns: 1fr;
+    }
+    
+    .endpoints {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .status-card, .info-card, .endpoints-card {
+        padding: 20px;
+        margin: 15px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .endpoints {
+        grid-template-columns: 1fr;
+    }
+    
+    .status-card, .info-card, .endpoints-card {
+        padding: 15px;
+        margin: 10px 0;
+    }
+}
+
+/* ========================================
+   ESTILOS ESPECÍFICOS PARA PÁGINA PRINCIPAL
+   ======================================== */
+
+/* Body para página principal - sin centrado vertical */
+body.main-page {
+    padding: 0 !important;
+    background-attachment: fixed;
+    display: block !important; /* Anular cualquier flex */
+    align-items: unset !important;
+    justify-content: unset !important;
+}
+
+/* Container principal - diseño completo de página */
+.main-container {
+    max-width: 1200px !important;
+    width: 95% !important;
+    margin: 20px auto !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-radius: 20px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+    padding: 2rem !important;
+    text-align: left !important; /* Cambiar a izquierda para mejor lectura */
+    animation: slideIn 0.8s ease-out;
+    border: 1px solid rgba(240, 6, 34, 0.2) !important;
+    min-height: calc(100vh - 40px) !important;
+}
+
+/* Header de la página principal */
+.main-container header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(240, 6, 34, 0.1);
+}
+
+.main-container header h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin: 1rem 0;
+    font-weight: 700;
+}
+
+.main-container .subtitle {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    margin-bottom: 0;
+}
+
+/* Logo en página principal */
+.main-container .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.main-container .logo img {
+    width: 60px;
+    height: 60px;
+    margin-right: 1rem;
+}
+
+.main-container .logo-fallback {
+    font-size: 3rem;
+    margin-right: 1rem;
+}
+
+/* Main content con grid layout */
+.main-container main {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+}
+
+/* Responsive para página principal */
+@media (min-width: 768px) {
+    .main-container {
+        padding: 3rem;
+    }
+    
+    .main-container main {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .main-container .status-card {
+        grid-column: 1 / -1; /* Ocupar todo el ancho */
+    }
+}
+
+@media (min-width: 1024px) {
+    .main-container {
+        padding: 4rem;
+    }
+}

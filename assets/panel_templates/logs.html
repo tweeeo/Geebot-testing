@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block title %}Logs - GeeBot Control Panel{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2">Logs del Sistema</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <button class="btn btn-outline-primary" onclick="location.reload()">
+            <i class="bi bi-arrow-clockwise"></i> Actualizar
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-file-text"></i> Logs Recientes
+                </h5>
+                <div class="btn-group btn-group-sm" role="group">
+                    <button type="button" class="btn btn-outline-secondary active" data-filter="all">
+                        Todos
+                    </button>
+                    <button type="button" class="btn btn-outline-info" data-filter="info">
+                        Info
+                    </button>
+                    <button type="button" class="btn btn-outline-warning" data-filter="warning">
+                        Advertencias
+                    </button>
+                    <button type="button" class="btn btn-outline-danger" data-filter="error">
+                        Errores
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h6 class="alert-heading">Sistema de Logs en Desarrollo</h6>
+                    <p class="mb-0">
+                        Esta funcionalidad está en desarrollo. Próximamente podrás ver:
+                    </p>
+                    <ul class="mt-2 mb-0">
+                        <li>Logs del bot de Discord en tiempo real</li>
+                        <li>Logs de autenticación OAuth</li>
+                        <li>Logs de errores y advertencias</li>
+                        <li>Filtrado por nivel de log</li>
+                        <li>Descarga de logs históricos</li>
+                    </ul>
+                </div>
+                
+                <!-- Placeholder para logs -->
+                <div class="bg-dark text-light p-3 rounded" style="font-family: 'Courier New', monospace; height: 400px; overflow-y: auto;">
+                    <div class="log-entry" data-level="info">
+                        <span class="text-muted">[2024-01-01 12:00:00]</span> 
+                        <span class="text-info">[INFO]</span> 
+                        Panel de control iniciado correctamente
+                    </div>
+                    <div class="log-entry" data-level="info">
+                        <span class="text-muted">[2024-01-01 12:00:01]</span> 
+                        <span class="text-info">[INFO]</span> 
+                        Servidor web escuchando en puerto 8001
+                    </div>
+                    <div class="log-entry" data-level="info">
+                        <span class="text-muted">[2024-01-01 12:00:02]</span> 
+                        <span class="text-info">[INFO]</span> 
+                        Autenticación configurada correctamente
+                    </div>
+                    <div class="log-entry" data-level="warning">
+                        <span class="text-muted">[2024-01-01 12:00:03]</span> 
+                        <span class="text-warning">[WARNING]</span> 
+                        Usando contraseña por defecto - cambiar en producción
+                    </div>
+                    <div class="log-entry" data-level="info">
+                        <span class="text-muted">[2024-01-01 12:00:04]</span> 
+                        <span class="text-info">[INFO]</span> 
+                        Templates cargados desde assets/panel_templates
+                    </div>
+                    <div class="log-entry" data-level="info">
+                        <span class="text-muted">[2024-01-01 12:00:05]</span> 
+                        <span class="text-info">[INFO]</span> 
+                        Sistema de logs inicializado
+                    </div>
+                    {% for log in logs %}
+                    <div class="log-entry" data-level="info">
+                        <span class="text-muted">[2024-01-01 12:00:06]</span> 
+                        <span class="text-info">[INFO]</span> 
+                        {{ log }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Configuración de Logs -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-sliders"></i> Configuración de Logs
+                </h5>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="logLevel" class="form-label">Nivel de Log</label>
+                        <select class="form-select" id="logLevel">
+                            <option value="DEBUG">Debug (Muy detallado)</option>
+                            <option value="INFO" selected>Info (Normal)</option>
+                            <option value="WARNING">Warning (Solo advertencias y errores)</option>
+                            <option value="ERROR">Error (Solo errores)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="maxLines" class="form-label">Máximo de líneas a mostrar</label>
+                        <input type="number" class="form-control" id="maxLines" value="100" min="10" max="1000">
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="autoRefresh" checked>
+                        <label class="form-check-label" for="autoRefresh">
+                            Auto-actualizar cada 5 segundos
+                        </label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-download"></i> Exportar Logs
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Descarga los logs para análisis offline</p>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-primary" disabled>
+                        <i class="bi bi-file-text"></i> Descargar Logs de Hoy
+                    </button>
+                    <button class="btn btn-outline-secondary" disabled>
+                        <i class="bi bi-archive"></i> Descargar Logs de la Semana
+                    </button>
+                    <button class="btn btn-outline-info" disabled>
+                        <i class="bi bi-file-zip"></i> Descargar Todos los Logs
+                    </button>
+                </div>
+                <small class="text-muted mt-2 d-block">
+                    Funcionalidad disponible próximamente
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Estadísticas de Logs -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-bar-chart"></i> Estadísticas de Logs
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="border rounded p-3">
+                            <h4 class="text-info">156</h4>
+                            <small class="text-muted">Logs de Info</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded p-3">
+                            <h4 class="text-warning">23</h4>
+                            <small class="text-muted">Advertencias</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded p-3">
+                            <h4 class="text-danger">3</h4>
+                            <small class="text-muted">Errores</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded p-3">
+                            <h4 class="text-success">182</h4>
+                            <small class="text-muted">Total</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Filtrado de logs
+document.querySelectorAll('[data-filter]').forEach(button => {
+    button.addEventListener('click', function() {
+        // Actualizar botones activos
+        document.querySelectorAll('[data-filter]').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        
+        const filter = this.getAttribute('data-filter');
+        const logEntries = document.querySelectorAll('.log-entry');
+        
+        logEntries.forEach(entry => {
+            if (filter === 'all' || entry.getAttribute('data-level') === filter) {
+                entry.style.display = 'block';
+            } else {
+                entry.style.display = 'none';
+            }
+        });
+    });
+});
+
+// Auto-refresh
+let autoRefreshInterval;
+
+function toggleAutoRefresh() {
+    const checkbox = document.getElementById('autoRefresh');
+    
+    if (checkbox.checked) {
+        autoRefreshInterval = setInterval(() => {
+            // Simular nuevos logs (en implementación real, esto haría una petición AJAX)
+            const logContainer = document.querySelector('.bg-dark');
+            const now = new Date().toISOString().replace('T', ' ').substr(0, 19);
+            const newLog = document.createElement('div');
+            newLog.className = 'log-entry';
+            newLog.setAttribute('data-level', 'info');
+            newLog.innerHTML = `
+                <span class="text-muted">[${now}]</span> 
+                <span class="text-info">[INFO]</span> 
+                Sistema funcionando correctamente
+            `;
+            logContainer.appendChild(newLog);
+            
+            // Scroll al final
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }, 5000);
+    } else {
+        clearInterval(autoRefreshInterval);
+    }
+}
+
+// Inicializar auto-refresh
+document.getElementById('autoRefresh').addEventListener('change', toggleAutoRefresh);
+toggleAutoRefresh();
+
+// Scroll automático al final
+document.addEventListener('DOMContentLoaded', function() {
+    const logContainer = document.querySelector('.bg-dark');
+    logContainer.scrollTop = logContainer.scrollHeight;
+});
+</script>
+{% endblock %}

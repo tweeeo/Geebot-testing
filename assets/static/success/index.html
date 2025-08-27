@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SUCCESS — Cuenta vinculada</title>
+  <meta name="description" content="Confirmación de vinculación de cuenta completada correctamente." />
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="wrap" role="main" aria-labelledby="title">
+    <section class="card" aria-live="polite">
+      <div class="ring" aria-hidden="true"></div>
+      <div class="row">
+        <div class="icon" aria-hidden="true">
+          <!-- Checkmark SVG -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" fill="var(--accent)"/>
+            <path d="M7.5 12.5l3 3 6-6" stroke="#111114" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <p class="badge" aria-label="Estado de vinculación">
+            <span>Cuenta vinculada</span>
+          </p>
+          <h1 id="title" class="title" aria-live="assertive">
+            <span class="accent">SUCCESS</span>
+          </h1>
+          <p class="meta">Tu cuenta se ha vinculado correctamente. Ya puedes volver a Discord.</p>
+          <p class="hint">Si esta página apareció tras la vinculación, puedes cerrar esta ventana con seguridad.</p>
+          <div class="actions">
+            <button class="btn secondary" type="button" id="closeWinBtn">Cerrar ventana</button>
+          </div>
+          <p class="hint" id="countdownText">Esta ventana se cerrará en 3 segundos...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
