@@ -8,6 +8,11 @@ from .dynamic_config import config
 # Inicializar configuraciones por defecto
 config.init_default_configs()
 
+# Preferencia archivo: permite definir constantes en este archivo que tienen
+# prioridad sobre la config dinámica para claves críticas que “no varían”.
+DISCORD_TOKEN_FILE = (os.environ.get("DISCORD_TOKEN_FILE", "").strip())  # opcional: puedes fijarlo aquí
+BASE_URL_FILE = "https://geebot-testing.onrender.com"  # dominio fijo del servicio web
+
 # Función para obtener configuración con fallback
 def get_config(key: str, default=None, convert_type=None):
     """Obtener configuración desde sistema dinámico o variables de entorno"""
@@ -25,15 +30,15 @@ def get_config(key: str, default=None, convert_type=None):
     
     return value
 
-# Discord Bot Token - Ahora opcional al inicio
-TOKEN = get_config("DISCORD_TOKEN")
+# Discord Bot Token: usar primero el valor del archivo, luego dinámico
+TOKEN = DISCORD_TOKEN_FILE or get_config("DISCORD_TOKEN")
 
 # Genius OAuth2 Credentials - Ahora opcional al inicio  
 GENIUS_CLIENT_ID = get_config("GENIUS_CLIENT_ID")
 GENIUS_CLIENT_SECRET = get_config("GENIUS_CLIENT_SECRET")
 
-# URLs dinámicas
-BASE_URL = get_config("BASE_URL", "https://geebot.onrender.com")
+# BASE_URL: usar primero el valor del archivo, luego dinámico
+BASE_URL = BASE_URL_FILE or get_config("BASE_URL", "https://geebot-testing.onrender.com")
 GENIUS_REDIRECT_URI = f"{BASE_URL}/callback"
 
 # Configuración del servidor web para Render
@@ -88,6 +93,7 @@ def get_missing_configs():
 def reload_config():
     """Recargar configuración desde la base de datos"""
     global TOKEN, GENIUS_CLIENT_ID, GENIUS_CLIENT_SECRET, BASE_URL
+    global DISCORD_TOKEN_FILE, BASE_URL_FILE
     global VERIFICATION_CHANNEL_ID, VERIFIED_ROLE_ID, GENIUS_ROLE_IDS, KEEP_ALIVE_INTERVAL
     global CMD_PREFIX, ENABLE_COMMAND_PING, ENABLE_COMMAND_TEST_WELCOME
     global WELCOME_REACTION_ENABLED, WELCOME_MESSAGE_TEXT
@@ -96,10 +102,11 @@ def reload_config():
     config._load_config()
     
     # Actualizar variables globales
-    TOKEN = get_config("DISCORD_TOKEN")
+    # Mantener prioridad de archivo en DISCORD_TOKEN y BASE_URL
+    TOKEN = DISCORD_TOKEN_FILE or get_config("DISCORD_TOKEN")
     GENIUS_CLIENT_ID = get_config("GENIUS_CLIENT_ID")
     GENIUS_CLIENT_SECRET = get_config("GENIUS_CLIENT_SECRET")
-    BASE_URL = get_config("BASE_URL", "https://geebot.onrender.com")
+    BASE_URL = BASE_URL_FILE or get_config("BASE_URL", "https://geebot-testing.onrender.com")
     VERIFICATION_CHANNEL_ID = get_config("VERIFICATION_CHANNEL_ID", "0", int)
     VERIFIED_ROLE_ID = get_config("VERIFIED_ROLE_ID", "1404855696842821653", int)
     KEEP_ALIVE_INTERVAL = get_config("KEEP_ALIVE_INTERVAL", 300, int)

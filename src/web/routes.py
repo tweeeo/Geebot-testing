@@ -44,7 +44,8 @@ def setup_routes(app: FastAPI):
             
             client_id = config.get('GENIUS_CLIENT_ID')
             client_secret = config.get('GENIUS_CLIENT_SECRET')
-            base_url = config.get('BASE_URL', 'https://geebot-testing.onrender.com')
+            from src.utils.config import BASE_URL as BASE_URL_FILE
+            base_url = BASE_URL_FILE
             
             if not client_id or not client_secret:
                 return templates.TemplateResponse("error.html", {
@@ -89,7 +90,8 @@ def setup_routes(app: FastAPI):
             
             client_id = config.get('GENIUS_CLIENT_ID')
             client_secret = config.get('GENIUS_CLIENT_SECRET')
-            base_url = config.get('BASE_URL', 'https://geebot-testing.onrender.com')
+            from src.utils.config import BASE_URL as BASE_URL_FILE
+            base_url = BASE_URL_FILE
             
             if not client_id or not client_secret:
                 return templates.TemplateResponse("error.html", {
